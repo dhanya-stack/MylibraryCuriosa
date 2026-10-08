@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f1e8">
+<title>Curiosa — A Library for Curious Minds</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
+:root{--bg:#f6f1e8;--paper:#fffdf8;--paper2:#fbf8f0;--ink:#21312b;--muted:#5d6d65;--line:#ded7c7;--sage:#dce6dc;--sage-deep:#c4d3c5;--accent:#a27148;--accent-soft:#eadcc9;--shadow:0 18px 40px rgba(38,52,44,.08);--radius:18px;--header:rgba(255,253,248,.86)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#fbf8f0 0,#f6f1e8 55%,#f3efe6 100%);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,sans-serif}
+button,input,select,textarea{font:inherit}
+a{color:inherit;text-decoration:none}button{cursor:pointer}img{max-width:100%;display:block}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(162,113,72,.55);outline-offset:3px}
+.shell{max-width:1280px;margin:auto;padding:0 28px}
+.serif{font-family:'Cormorant Garamond', Georgia, serif;letter-spacing:-.03em}
+.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:700;color:#7a887f}
+.topbar{padding:10px 16px;text-align:center;background:linear-gradient(90deg,#eef4ed,#f8f2ea,#eef4ed);border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.18em;color:#6f7c75}
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:var(--header);border-bottom:1px solid rgba(222,215,199,.85)}
+.navinner{max-width:1280px;margin:auto;display:flex;align-items:center;gap:26px;min-height:78px;padding:0 28px}
+.brand{font:700 40px/1 'Cormorant Garamond',serif;color:#24342e;letter-spacing:-.04em}
+.brand span{color:var(--accent)}
+.navlinks{display:flex;gap:22px;align-items:center;flex:1}
+.navlinks button,.navright button,.textbtn{border:0;background:none;padding:8px 0;color:var(--ink)}
+.navlinks button:hover,.navright button:hover,.textbtn:hover{color:var(--accent)}
+.navright{display:flex;align-items:center;gap:14px}
+.pill{border:1px solid #d5c9b8;background:#fffaf0;border-radius:999px;padding:10px 15px;font-weight:600;color:#66472f;box-shadow:0 4px 12px rgba(120,92,64,.08)}
+.mobilemenu{display:none;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fffdf8}
+main{min-height:60vh}
+.hero{padding:34px 0 26px}
+.hero-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:34px;align-items:stretch}
+.hero-copy{background:rgba(255,251,242,.78);border:1px solid rgba(222,215,199,.95);border-radius:28px;padding:44px 40px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center;min-height:670px}
+.hero-copy h1{font-size:clamp(60px,8vw,98px);line-height:.92;margin:16px 0 20px;color:#1d2d27}
+.hero-copy h1 em{font-style:italic;color:var(--accent);font-weight:600}
+.hero-copy p{font-size:17px;color:var(--muted);max-width:580px;margin:0 0 12px}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin:24px 0 18px}
+.primary,.secondary{border-radius:999px;padding:13px 20px;border:1px solid #c8b59b;background:#21312b;color:#fff;font-weight:600;box-shadow:0 8px 20px rgba(33,49,43,.12)}
+.secondary{background:#fffaf2;color:#544135;border-color:#d7cab7;box-shadow:none}
+.primary:hover{background:#30453d} .secondary:hover{background:#f4eee4}
+.statline{display:flex;flex-wrap:wrap;gap:18px;color:#728076;font-size:13px;margin-top:10px}
+.hero-figure{position:relative;background:#f1ede4;border:1px solid rgba(222,215,199,.95);border-radius:28px;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;justify-content:space-between;min-height:670px;overflow:hidden}
+.hero-figure::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 15% 15%,rgba(255,255,255,.85),transparent 32%),radial-gradient(circle at 83% 22%,rgba(220,230,220,.55),transparent 28%),linear-gradient(180deg,rgba(255,252,247,.28),rgba(255,252,247,0));pointer-events:none}
+.painting-frame{background:#fffdf9;border-radius:20px;padding:14px;box-shadow:0 10px 30px rgba(63,53,41,.12);position:relative}
+.painting-frame img{width:100%;height:100%;max-height:560px;object-fit:contain;border-radius:12px;background:#f6f3eb}
+.paint-caption{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:16px 6px 4px;position:relative;z-index:1}
+.paint-caption strong{display:block;font-weight:700;color:#22312b} .paint-caption small{display:block;color:#718076}
+.section{padding:54px 0}
+.headingrow{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+.headingrow h2{margin:8px 0 0;font-size:46px;line-height:1} .headingrow p{margin:0;color:var(--muted);max-width:480px}
+.inlinearrow{border:0;background:none;padding:0;color:#6b5038;text-decoration:underline;text-underline-offset:5px;font-weight:600}
+.subjects{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.subject{background:rgba(255,253,248,.76);border:1px solid rgba(222,215,199,.95);border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(43,57,49,.06);display:flex;flex-direction:column;min-height:230px;transition:transform .18s ease, box-shadow .18s ease}
+.subject:hover,.rescard:hover,.feature:hover,.mini-feature:hover,.pathcard:hover,.step:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(43,57,49,.11)}
+.subject-mosaic{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:98px 98px;gap:6px;padding:12px;background:linear-gradient(180deg,#f4f2eb,#eef1eb)}
+.subject-mosaic .big{grid-row:1/span 2}
+.subject-tile{border-radius:14px;background:linear-gradient(135deg,#e1e6df,#f3ede2);overflow:hidden;position:relative}
+.subject-tile img{width:100%;height:100%;object-fit:cover}
+.subject-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(30,39,35,.16))}
+.subject-info{padding:18px}
+.subject-info strong{display:block;font:600 26px/1 'Cormorant Garamond',serif;color:#20302a} .subject-info small{display:block;color:#7c8883;margin-top:5px}
+.editorial{display:grid;grid-template-columns:1.25fr .95fr;gap:18px}
+.feature,.mini-feature,.pathcard{position:relative;border:1px solid rgba(222,215,199,.95);border-radius:24px;overflow:hidden;background:#fffdf8;box-shadow:0 10px 30px rgba(42,55,48,.08);cursor:pointer}
+.feature{min-height:355px;padding:26px;display:flex;align-items:end}
+.feature .backdrop,.mini-feature .backdrop,.pathcard .backdrop{position:absolute;inset:0;background-size:cover;background-position:center}
+.feature .backdrop::after,.mini-feature .backdrop::after,.pathcard .backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(247,243,235,.12),rgba(29,41,36,.62))}
+.feature .content,.mini-feature .content,.pathcard .content{position:relative;color:#fff;z-index:1}
+.feature h3,.mini-feature h3,.pathcard h3{margin:8px 0 8px;font-size:40px;line-height:.95;font-family:'Cormorant Garamond',serif}
+.feature p,.mini-feature p,.pathcard p{margin:0;max-width:460px;color:rgba(255,255,255,.9)}
+.sidefeatures{display:grid;grid-template-rows:1fr 1fr;gap:18px}
+.mini-feature{min-height:168px;padding:22px;display:flex;align-items:end}
+.mini-feature h3{font-size:34px}
+.discovery{padding:42px 0}
+.discoveryinner{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;background:linear-gradient(135deg,#eff4ee,#f8f3ea);border:1px solid var(--line);border-radius:24px;padding:28px 30px;box-shadow:0 12px 26px rgba(40,54,47,.06)}
+.discoveryinner h3{margin:8px 0 8px;font-size:36px} .discoveryinner p{margin:0;color:var(--muted);max-width:630px}
+.pageintro{padding:34px 28px 12px} .pageintro h1{font-size:58px;line-height:.95;margin:10px 0} .pageintro p{color:var(--muted);max-width:760px}
+.controls{display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,180px)) auto;gap:12px;align-items:end;margin-bottom:16px}
+.control label{display:block;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#7a887f;margin-bottom:8px;font-weight:700}
+.searchbox,input,select,textarea{width:100%;border:1px solid #d8cfbf;border-radius:16px;background:#fffdf8;padding:14px 16px;color:var(--ink)}
+.viewtoggle{display:flex;gap:8px;justify-content:flex-end}
+.viewtoggle button{border:1px solid #d8cfbf;background:#fffdf8;border-radius:14px;padding:12px 14px;min-width:48px}
+.viewtoggle .on{background:#e8ede6}
+.libraryhead{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:10px 0 18px;color:#738178;font-size:13px}
+.resources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding-bottom:32px}
+.resources.listview{grid-template-columns:1fr}
+.rescard{background:#fffdf8;border:1px solid rgba(222,215,199,.95);border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(43,57,49,.06);display:flex;flex-direction:column;position:relative;transition:transform .18s ease, box-shadow .18s ease}
+.resources.listview .rescard{display:grid;grid-template-columns:260px 1fr}
+.cardmedia{position:relative;height:228px;background:linear-gradient(135deg,#e4ebe4,#f3ece1);overflow:hidden}
+.resources.listview .cardmedia{height:100%}
+.cardmedia img{width:100%;height:100%;object-fit:cover;display:block}
+.cardmedia.fallback img{display:none}
+.cardmedia::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(26,35,31,.3))}
+.media-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:18px;color:#fff;background:linear-gradient(135deg,#c2d2c3,#e9d8c3 60%,#8ea69a);z-index:1}
+.media-fallback strong{font:600 30px/1 'Cormorant Garamond',serif}
+.media-fallback span{opacity:.9}
+.media-chip{position:absolute;top:14px;left:14px;z-index:2;background:rgba(255,253,248,.92);backdrop-filter:blur(4px);padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6d5440}
+.cardcontent{padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.cardmeta{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#7a887f}
+.cardtitle{font:600 30px/1 'Cormorant Garamond',serif;margin:0;color:#20302a}
+.carddesc{margin:0;color:var(--muted)}
+.cardfooter{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#768279;font-size:13px}
+.save{border:1px solid #d8cfbf;background:#fffdf8;border-radius:999px;padding:8px 12px} .save.saved{background:#f4ebe0;color:#7c5231}
+.noresult{padding:28px;border:1px dashed #d8cfbf;border-radius:22px;background:#fffdf8;color:#7c8883}
+.detail-hero{padding-top:20px}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.25fr) 360px;gap:24px;padding:18px 0 50px}
+.detail-main,.sidebar{background:#fffdf8;border:1px solid rgba(222,215,199,.95);border-radius:24px;box-shadow:0 10px 28px rgba(43,57,49,.06)}
+.detail-main{overflow:hidden}
+.detail-main .cardmedia{height:440px;border-radius:24px 24px 0 0}
+.detail-copy{padding:24px 24px 28px}
+.detail-copy h2{margin:22px 0 8px;font:600 32px/1 'Cormorant Garamond',serif}
+.detailbuttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.sidebar{padding:22px;align-self:start;position:sticky;top:98px}
+.sidebar dl{display:grid;grid-template-columns:110px 1fr;gap:10px 12px;margin:18px 0 0} .sidebar dt{color:#7a887f;font-size:13px} .sidebar dd{margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:8px} .tag{background:#eef3ed;border-radius:999px;padding:8px 12px;font-size:12px;color:#53645b}
+.notice{font-size:13px;color:#768279;line-height:1.6}
+.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.pathgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding-bottom:26px}
+.steps{display:grid;gap:14px}
+.step{display:grid;grid-template-columns:70px 1fr;gap:18px;background:#fffdf8;border:1px solid rgba(222,215,199,.95);border-radius:20px;padding:18px;box-shadow:0 10px 28px rgba(43,57,49,.06);cursor:pointer}
+.stepnumber{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#eef3ed;color:#44584e;font-weight:700}
+.formbox{max-width:760px;background:#fffdf8;border:1px solid rgba(222,215,199,.95);border-radius:24px;padding:24px;box-shadow:0 10px 28px rgba(43,57,49,.06)}
+.formbox label{display:block;margin-top:14px;margin-bottom:8px;font-weight:600}
+textarea{min-height:140px;resize:vertical}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(14px);background:#24352e;color:#fff;padding:12px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:120} .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{padding:40px 0 60px;color:#7b8881} footer .shell{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px}
+@media (max-width:1120px){.resources{grid-template-columns:repeat(2,minmax(0,1fr))}.subjects{grid-template-columns:repeat(3,minmax(0,1fr))}.pathgrid{grid-template-columns:1fr 1fr}.hero-wrap,.editorial,.detail-grid{grid-template-columns:1fr}.sidebar{position:static}.hero-copy,.hero-figure{min-height:auto}}
+@media (max-width:780px){.topbar{font-size:10px;letter-spacing:.12em}.navinner{padding:0 18px;gap:14px;min-height:70px;flex-wrap:wrap}.brand{font-size:34px}.mobilemenu{display:block;margin-left:auto}.navlinks{display:none;flex-basis:100%;padding-bottom:14px;flex-wrap:wrap;gap:12px}.navlinks.open{display:flex}.navright{gap:10px}.shell{padding:0 18px}.hero-copy{padding:30px 24px}.hero-copy h1{font-size:54px}.headingrow{flex-direction:column;align-items:flex-start}.subjects,.resources,.pathgrid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.resources.listview .rescard{grid-template-columns:1fr}.pageintro{padding:28px 18px 8px}.pageintro h1{font-size:48px}.feature h3{font-size:36px}.detail-main .cardmedia{height:290px}}
+
+.brandlockup{display:flex;flex-direction:column;gap:0;line-height:1;min-width:175px}
+.brand-subtitle{font:500 10px/1.4 Inter, sans-serif;letter-spacing:.055em;color:#777269;margin-top:4px}
+.hero-wrap{grid-template-columns:.85fr 1.15fr;gap:20px}
+.hero-copy,.hero-figure{min-height:740px}
+.hero-figure{padding:9px;background:#eee9e1}
+.painting-frame{width:100%;height:100%;padding:8px;display:flex;justify-content:center;align-items:center}
+.painting-frame img{width:100%;height:100%;max-height:710px;object-fit:contain}
+.hero-figure::before{display:none}
+.subject-mosaic{gap:4px;background:#f2f0eb}
+.subject-tile{background:#e2e5df}
+.subject-tile::after{background:none}
+.cardmedia::after{background:transparent}
+.cardmedia img{object-fit:cover}
+.media-fallback{display:none}
+.cardmedia.fallback .media-fallback{display:flex}
+@media(max-width:1120px){.hero-wrap{grid-template-columns:1fr}.hero-copy,.hero-figure{min-height:auto}.hero-figure{height:660px}}
+@media(max-width:780px){.hero-figure{height:500px}.painting-frame img{max-height:475px}.brandlockup{min-width:auto}.brand-subtitle{font-size:9px}.navright .pill{padding:8px}}
+</style>
+</head>
+<body>
+<div class="topbar">CURIOSA · A LIBRARY FOR CURIOUS MINDS · DISCOVER, WONDER, LEARN</div>
+<header class="nav">
+  <div class="navinner">
+    <a href="#home" class="brandlockup"><span class="brand">Curio<span>sa</span></span><span class="brand-subtitle">A Library for Curious Minds</span></a>
+    <button class="mobilemenu" id="mobilemenu" aria-label="Toggle menu">☰</button>
+    <nav class="navlinks" id="navlinks">
+      <button data-route="home">Home</button>
+      <button data-route="subjects">Subjects</button>
+      <button data-route="library">Library</button>
+      <button data-route="pathways">Learning paths</button>
+      <button data-route="about">About</button>
+    </nav>
+    <div class="navright">
+      <button id="navsurprise" class="pill" type="button">Surprise me ✦</button>
+      <button data-route="saved" class="textbtn" type="button">Saved <span id="savecount">0</span></button>
+    </div>
+  </div>
+</header>
+<main id="app"></main>
+<footer>
+  <div class="shell">
+    <div>
+      <div class="brand" style="font-size:32px">Curio<span>sa</span></div>
+      <div style="margin-top:6px">A Library for Curious Minds</div>
+    </div>
+    <div style="max-width:600px">A curated collection of beautiful tools, unexpected ideas and places worth exploring. Curiosa introduces the resource and takes you to the original creator for the full experience.</div>
+  </div>
+</footer>
+<div class="toast" id="toast" aria-live="polite"></div>
+<script>
+const categories=[['Mathematics','∑','math'],['Physics','✦','physics'],['Engineering','⌁','engineering'],['Computing & AI','⌘','computing'],['Electronics & Making','⚙','making'],['Art & Design','✳','art'],['Literature & Language','Aa','literature'],['History & Culture','◈','history'],['Nature & the World','❀','nature'],['Statistics & Data','▥','statistics']];
+const R=[
+['desmos','Desmos Graphing Calculator','Mathematics','Interactive tool','Beginner','Free','A beautiful, immediate way to see how equations become shapes. Explore functions, parameters, transformations and mathematical patterns.','https://www.desmos.com/calculator','ƒ(x)','Try moving sliders and watching a curve respond. Particularly useful for visual learners.',['visual','math']],
+['desmos3d','Desmos 3D','Mathematics','Interactive tool','Intermediate','Free','Explore three-dimensional graphs and surfaces with a browser-based mathematical visualisation tool.','https://www.desmos.com/3d','xyz','Change an equation and watch its geometry change in three dimensions.',['visual','math']],
+['3b1b','3Blue1Brown','Mathematics','Video','All levels','Free','Visually rich explanations of calculus, linear algebra and other mathematical ideas that turn abstract concepts into intuition.','https://www.3blue1brown.com/','π','An excellent starting point when a formula makes more sense as a moving picture.',['visual','math']],
+['mitmath','MIT Linear Algebra','Mathematics','Course','Intermediate','Free','Gilbert Strang’s well-known linear algebra course, with lectures and accompanying study material.','https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/','A⃗','Useful for a deeper, structured study of vectors, matrices and linear transformations.',['math']],
+['mitphysics','MIT Classical Mechanics','Physics','Course','Beginner','Free','A university-level course exploring motion, forces, energy and mechanics through lectures, readings and practice.','https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/','F','For anyone who enjoys understanding the physical world from first principles.',['physics']],
+['phet','PhET Simulations','Physics','Interactive tool','Beginner','Free','Interactive science and mathematics simulations that invite experimentation with physical concepts.','https://phet.colorado.edu/','⚛','Try changing one variable at a time and observe what changes.',['physics','visual']],
+['mitocw','MIT OpenCourseWare','Engineering','Course library','All levels','Free','Explore freely accessible MIT course materials across engineering, science, humanities and more.','https://ocw.mit.edu/','MIT','A broad, reliable destination when you want to study a subject in depth.',['engineering']],
+['nptel','NPTEL','Engineering','Course library','All levels','Free learning','A large collection of courses taught by faculty from Indian institutes, spanning engineering and other disciplines.','https://nptel.ac.in/','N','Choose by topic and depth; optional certifications can have fees.',['engineering']],
+['nist','NIST Engineering Statistics Handbook','Statistics & Data','Reference','Intermediate','Free','An applied reference for exploratory data analysis, statistical process control, process capability and experimental design.','https://www.itl.nist.gov/div898/handbook/','σ','Especially useful for connecting statistical methods with real engineering problems.',['statistics','engineering']],
+['kaggle','Kaggle Learn','Statistics & Data','Course','Beginner','Free','Short practical courses in Python, SQL, data visualisation and machine learning, often with hands-on exercises.','https://www.kaggle.com/learn','{ }','Good for practising a concept immediately after learning it.',['statistics','computing']],
+['bigquery','Google BigQuery Sandbox','Statistics & Data','Tool','Intermediate','Free tier','A way to explore SQL queries on cloud datasets, subject to sandbox limits and platform requirements.','https://cloud.google.com/bigquery/docs/sandbox','SQL','A practical environment for learning how analysts query larger datasets.',['statistics','computing']],
+['cs50p','Harvard CS50P','Computing & AI','Course','Beginner','Free learning','Harvard’s introductory programming course focused on Python, with problem sets and a final project.','https://cs50.harvard.edu/python/','Py','Structured exercises make this particularly useful for moving from watching lessons to writing code.',['computing']],
+['cs50x','Harvard CS50x','Computing & AI','Course','Beginner','Free learning','An introduction to computer science through programming, algorithms and problem solving.','https://cs50.harvard.edu/x/','01','A broad route into computing fundamentals.',['computing']],
+['freecodecamp','freeCodeCamp','Computing & AI','Course library','Beginner','Free','Free coding curricula and practice projects across web development, databases and programming.','https://www.freecodecamp.org/','</>','A good companion to project-based learning.',['computing']],
+['huggingface','Hugging Face Learn','Computing & AI','Course library','Intermediate','Free','Learning materials on transformers, modern AI tools, models and open machine-learning ecosystems.','https://huggingface.co/learn','AI','A place to explore how today’s machine-learning systems are built and shared.',['computing']],
+['arduino','Arduino Tutorials','Electronics & Making','Tutorial library','Beginner','Free','Hands-on guides for microcontrollers, sensors, circuits and small electronics projects.','https://docs.arduino.cc/tutorials/','⚡','Begin with a simple circuit and build up to sensing and movement.',['making']],
+['tinkercad','Tinkercad Circuits','Electronics & Making','Interactive tool','Beginner','Free','Design and simulate basic electronic circuits in a browser, including Arduino-based experiments.','https://www.tinkercad.com/circuits','⊞','Useful for testing an idea before wiring components.',['making','visual']],
+['origamiusa','OrigamiUSA Free Diagrams','Art & Design','Tutorial library','Beginner','Free','A selection of paper-folding diagrams for exploring origami, from approachable shapes to intricate models.','https://origamiusa.org/diagrams/free','✂','A single sheet of paper can become a surprisingly rich exercise in geometry and patience.',['art','making']],
+['blender','Blender','Art & Design','Software','All levels','Free','Open-source 3D creation software for modelling, animation, rendering and visual storytelling.','https://www.blender.org/','3D','A vast creative playground, supported by community tutorials.',['art','computing']],
+['met','The Met: Art History Timeline','History & Culture','Digital collection','All levels','Free','Artworks, essays and timelines that reveal connections across world cultures and historical periods.','https://www.metmuseum.org/toah/','◈','An inviting way to wander through art history without a fixed syllabus.',['history','art']],
+['smithsonian','Smithsonian Open Access','History & Culture','Digital archive','All levels','Free','An enormous digital collection of museum objects, images and cultural and scientific artefacts.','https://www.si.edu/openaccess','✧','Browse a little without a destination; the unexpected finds are part of the appeal.',['history','nature']],
+['googlearts','Google Arts & Culture','History & Culture','Virtual museum','All levels','Free','Explore virtual exhibitions, artworks, museum collections and stories from around the world.','https://artsandculture.google.com/','▧','Great for a quiet afternoon of exploration.',['history','art']],
+['gutenberg','Project Gutenberg','Literature & Language','Digital library','All levels','Free','A large collection of ebooks, especially older works in the US public domain, available in multiple formats.','https://www.gutenberg.org/','Ab','Discover classics without a subscription; copyright status can differ by country.',['literature']],
+['standardebooks','Standard Ebooks','Literature & Language','Digital library','All levels','Free','Beautifully formatted, proofread editions of public-domain literature for digital reading.','https://standardebooks.org/','¶','A thoughtful reading experience for classic works.',['literature']],
+['openstax','OpenStax','Nature & the World','Textbook library','All levels','Free','Peer-reviewed, openly licensed textbooks across science, mathematics and a variety of other subjects.','https://openstax.org/','☷','An accessible textbook starting point for structured study.',['nature','math']],
+['nasa','NASA Science','Nature & the World','Discovery portal','All levels','Free','Explore space missions, astronomy, planetary science and discoveries about Earth and beyond.','https://science.nasa.gov/','☾','Follow current scientific questions through images, missions and articles.',['nature','physics']],
+['libretexts','LibreTexts','Nature & the World','Textbook library','All levels','Free','Open educational textbooks and learning materials spanning science, mathematics and humanities.','https://libretexts.org/','∞','Helpful when you need another explanation of a challenging subject.',['nature','math']],
+['statsquest','StatQuest','Statistics & Data','Video','Beginner','Free','Clear, approachable explanations of statistics and machine-learning concepts with diagrams and examples.','https://statquest.org/','μ','Useful when statistical terminology starts to get in the way of the idea.',['statistics','computing']]
+].map(([id,title,category,type,level,cost,desc,url,symbol,note,tags])=>({id,title,category,type,level,cost,desc,url,symbol,note,tags}))
+const collections=[{id:'visual',title:'Mathematics you can see',desc:'Equations, patterns and physical ideas made tangible through visuals.',ids:['desmos','desmos3d','3b1b','phet']},{id:'making',title:'Make something',desc:'From your first circuit to a paper sculpture or a 3D creation.',ids:['arduino','tinkercad','origamiusa','blender']},{id:'wander',title:'Unexpected discoveries',desc:'Take a gentle detour through museums, libraries and the cosmos.',ids:['smithsonian','met','googlearts','nasa','gutenberg']}];
+const paths=[{id:'visual-maths',title:'See the mathematics',desc:'A visual route into functions, linear algebra and mathematical thinking.',ids:['desmos','3b1b','desmos3d','mitmath']},{id:'electronics',title:'From circuits to creations',desc:'Experiment with electronic components, then make something real.',ids:['tinkercad','arduino','blender']},{id:'data',title:'Finding stories in data',desc:'Explore statistics, query datasets and build analytical intuition.',ids:['statsquest','kaggle','bigquery','nist']}];
+const heroPainting='painting-clean.jpg';
+const app=document.getElementById('app');
+let state={q:'',category:'All',type:'All',cost:'All',view:'grid'};
+let saved=new Set(JSON.parse(localStorage.getItem('curiosa.saved')||'[]'));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const categoryIndex=Object.fromEntries(categories.map(c=>[c[0],{name:c[0],symbol:c[1],className:c[2]}]));
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-')}
+function shot(url,w=1200){return 'https://image.thum.io/get/width/'+w+'/crop/900/noanimate/'+encodeURIComponent(url)}
+function previewUrl(r){return 'assets/'+r.id+'.svg'}
+function subjectSamples(name){return R.filter(r=>r.category===name).slice(0,3)}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window._t);window._t=setTimeout(()=>el.classList.remove('show'),2800)}
+function nav(route){location.hash=route;document.getElementById('navlinks').classList.remove('open')}
+function surprise(){nav('resource/'+R[Math.floor(Math.random()*R.length)].id)}
+function save(id){saved.has(id)?saved.delete(id):saved.add(id);localStorage.setItem('curiosa.saved',JSON.stringify([...saved]));document.getElementById('savecount').textContent=saved.size;render();toast(saved.has(id)?'Saved to your library':'Removed from saved')}
+function media(r,small=false){return `<div class="cardmedia"><span class="media-chip">${esc(r.category)}</span><img loading="lazy" src="${esc(previewUrl(r))}" alt="Illustrated preview for ${esc(r.title)}" onerror="this.parentElement.classList.add('fallback')"><div class="media-fallback"><span>${esc(r.type)}</span><strong>${esc(r.symbol)}</strong></div></div>`}
+function card(r){return `<article class="rescard" data-open="${r.id}" tabindex="0" role="link" aria-label="Read about ${esc(r.title)}">${media(r)}<div class="cardcontent"><div class="cardmeta">${esc(r.type)} · ${esc(r.cost)}</div><h3 class="cardtitle">${esc(r.title)}</h3><p class="carddesc">${esc(r.desc)}</p><div class="cardfooter"><span>${esc(r.level)}</span><button class="save ${saved.has(r.id)?'saved':''}" data-save="${r.id}" aria-label="${saved.has(r.id)?'Remove saved':'Save'} ${esc(r.title)}">${saved.has(r.id)?'♥ Saved':'♡ Save'}</button></div></div></article>`}
+function cards(items){return items.length?`<div class="resources ${state.view==='list'?'listview':''}">${items.map(card).join('')}</div>`:'<div class="resources"><div class="noresult">No resources found. Try another search or filter.</div></div>'}
+function subjectCard(name,home=false){const c=categoryIndex[name];const items=subjectSamples(name);return `<button class="subject" data-route="category/${encodeURIComponent(name)}"><div class="subject-mosaic">${items.map((r,i)=>`<div class="subject-tile ${i===0?'big':''}"> <img loading="lazy" src="${esc(previewUrl(r))}" alt="" onerror="this.style.display='none'"> </div>`).join('')}</div><div class="subject-info"><strong>${esc(name)}</strong><small>${items.length} starting points · click to explore</small></div></button>`}
+function subjects(home=false){const items=(home?categories.slice(0,5):categories).map(c=>subjectCard(c[0],home)).join(''); return `<div class="subjects">${items}</div>`}
+function title(t,desc=''){return `<div class="pageintro shell"><div class="eyebrow">CURIOSA / EXPLORE</div><h1 class="serif">${t}</h1>${desc?`<p>${desc}</p>`:''}</div>`}
+function collectionBackdrop(ids){const arr=ids.map(id=>R.find(r=>r.id===id)).filter(Boolean).slice(0,3); if(!arr.length) return ''; return `linear-gradient(180deg,rgba(22,31,27,.08),rgba(22,31,27,.08)),url('${previewUrl(arr[0])}')`}
+function home(){return `<section class="hero"><div class="shell hero-wrap"><div class="hero-copy"><div class="eyebrow">EXPLORE & LEARN</div><h1 class="serif">Follow your <em>curiosity</em>.</h1><p>A collection of educational resources, including courses, interactive tools, books, museums and digital archives.</p><div class="cta"><button class="primary" data-route="library">Explore the library ↗</button><button class="secondary" data-surprise>Surprise me ✦</button></div><div class="statline"><span>${R.length} discoveries</span><span>${categories.length} subjects</span><span>Curated for lifelong learners</span></div></div><div class="hero-figure"><a class="painting-frame" href="https://americanart.si.edu/artwork/girl-i-left-behind-me-11492" target="_blank" rel="noopener noreferrer" aria-label="View the painting at the Smithsonian"><img src="${heroPainting}" alt="The Girl I Left Behind Me by Eastman Johnson" ></a></div></div></section><section class="section shell"><div class="headingrow"><div><div class="eyebrow">CHOOSE YOUR CURIOSITY</div><h2 class="serif">A world of subjects</h2></div><p>Choose a subject to browse its resources.</p></div>${subjects(true)}<div style="margin-top:16px"><button class="inlinearrow" data-route="subjects">See every subject ↗</button></div></section><section class="section shell" style="padding-top:6px"><div class="headingrow"><div><div class="eyebrow">THE EDITOR'S SHELF</div><h2 class="serif">Featured collections</h2></div></div><div class="editorial"><div class="feature" data-route="collection/visual"><div class="backdrop" style="background-image:${collectionBackdrop(collections[0].ids)}"></div><div class="content"><div class="eyebrow" style="color:rgba(255,255,255,.8)">FEATURED COLLECTION / 01</div><h3>${collections[0].title}</h3><p>${collections[0].desc}</p><div style="margin-top:10px">Explore collection ↗</div></div></div><div class="sidefeatures">${collections.slice(1).map((c,i)=>`<div class="mini-feature" data-route="collection/${c.id}"><div class="backdrop" style="background-image:${collectionBackdrop(c.ids)}"></div><div class="content"><div class="eyebrow" style="color:rgba(255,255,255,.8)">FEATURED COLLECTION / 0${i+2}</div><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p></div></div>`).join('')}</div></div></section><section class="discovery"><div class="shell discoveryinner"><div><div class="eyebrow">A LITTLE SERENDIPITY</div><h3 class="serif">Not sure where to begin?</h3><p>Open a randomly selected resource from the library.</p></div><button class="primary" data-surprise>Open a surprise resource ↗</button></div></section>`}
+function toolbar(){const types=['All',...new Set(R.map(r=>r.type))].sort();const costs=['All','Free','Free learning','Free tier'];return `<div class="controls"><div class="control"><label for="search">Search</label><input id="search" class="searchbox" value="${esc(state.q)}" placeholder="Try Blender, statistics, origami, museum…"></div><div class="control"><label for="categoryfilter">Subject</label><select id="categoryfilter">${['All',...categories.map(c=>c[0])].map(v=>`<option ${state.category===v?'selected':''}>${esc(v)}</option>`).join('')}</select></div><div class="control"><label for="typefilter">Type</label><select id="typefilter">${types.map(v=>`<option ${state.type===v?'selected':''}>${esc(v)}</option>`).join('')}</select></div><div class="control"><label for="costfilter">Access</label><select id="costfilter">${costs.map(v=>`<option ${state.cost===v?'selected':''}>${esc(v)}</option>`).join('')}</select></div><div class="viewtoggle"><button class="${state.view==='grid'?'on':''}" data-view="grid" aria-label="Grid view">▦</button><button class="${state.view==='list'?'on':''}" data-view="list" aria-label="List view">☷</button></div></div>`}
+function filtered(items){return items.filter(r=>(state.category==='All'||r.category===state.category)&&(state.type==='All'||r.type===state.type)&&(state.cost==='All'||(state.cost==='Free'?r.cost==='Free':r.cost===state.cost))&&(`${r.title} ${r.desc} ${r.category} ${r.type} ${r.tags.join(' ')}`.toLowerCase().includes(state.q.toLowerCase())))}
+function library(items=R,heading='The library',desc='An open shelf of places to learn, tools to try and things to wonder about.'){const arr=filtered(items);return `${title(esc(heading),esc(desc))}<section class="shell">${toolbar()}<div class="libraryhead"><small id="resultcount">Showing ${arr.length} of ${items.length} discoveries</small><span class="eyebrow">CURIOSA / KEEP EXPLORING</span></div><div id="resultcards">${cards(arr)}</div></section>`}
+function detail(r){const similar=R.filter(x=>x.id!==r.id&&(x.category===r.category||x.tags.some(t=>r.tags.includes(t)))).slice(0,4);return `${title(esc(r.title),esc(r.desc))}<section class="shell detail-hero"><button class="textbtn" data-route="library">← Back to the library</button><div class="detail-grid"><div class="detail-main">${media(r)}<div class="detail-copy"><div class="eyebrow">${esc(r.category)} / ${esc(r.type)}</div><h1 class="serif" style="font-size:64px;line-height:.92;margin:10px 0 14px">${esc(r.title)}</h1><p style="font-size:17px;color:var(--muted)">${esc(r.desc)}</p><div class="detailbuttons"><a class="primary" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">Visit original resource ↗</a><button class="secondary" data-save="${r.id}">${saved.has(r.id)?'♥ Saved':'♡ Save resource'}</button><button class="secondary" data-share="${r.id}">Share ↗</button></div><h2>Why explore this?</h2><p>${esc(r.note)}</p><h2>What you’ll find</h2><p>${esc(r.desc)} Curiosa introduces the resource, but the full experience always lives on the original website.</p><h2>Related discoveries</h2><div class="related">${similar.map(card).join('')}</div></div></div><aside class="sidebar"><div class="eyebrow">RESOURCE DETAILS</div><dl><dt>Format</dt><dd>${esc(r.type)}</dd><dt>Level</dt><dd>${esc(r.level)}</dd><dt>Access</dt><dd>${esc(r.cost)}</dd><dt>Subject</dt><dd>${esc(r.category)}</dd><dt>Official site</dt><dd style="word-break:break-word"><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">${esc(new URL(r.url).hostname)} ↗</a></dd></dl><div class="tags" style="margin-top:24px">${r.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div><p class="notice" style="margin-top:24px">Prototype cards use illustrative preview images, not official website screenshots. Descriptions are editorial summaries, and Curiosa is not affiliated with the listed organisations.</p></aside></div></section>`}
+function collection(id){const col=collections.find(c=>c.id===id);if(!col)return library();const items=col.ids.map(id=>R.find(r=>r.id===id)).filter(Boolean);return `${title(esc(col.title),esc(col.desc))}<section class="shell"><button class="textbtn" data-route="home">← Back to discover</button><div style="padding-top:16px">${cards(items)}</div></section>`}
+function pathway(id){const p=paths.find(x=>x.id===id);if(!p)return library();return `${title(esc(p.title),esc(p.desc))}<section class="shell" style="max-width:920px"><div class="eyebrow" style="margin:18px 0">A CURATED JOURNEY · ${p.ids.length} STOPS</div><div class="steps">${p.ids.map((id,i)=>{const r=R.find(x=>x.id===id);return `<div class="step" data-open="${id}"><div class="stepnumber">0${i+1}</div><div><h3 class="serif" style="margin:2px 0 6px;font-size:34px">${esc(r.title)} ↗</h3><p style="margin:0;color:var(--muted)">${esc(r.desc)}</p><div class="cardmeta" style="margin-top:8px">${esc(r.type)} · ${esc(r.cost)}</div></div></div>`}).join('')}</div><p class="notice" style="margin-top:18px">Pathways are suggested routes, not prerequisites. Explore in whatever order suits you.</p></section>`}
+function pathwaysPage(){return `${title('Learning paths','Follow a gentle thread through a subject, a skill or a way of thinking.')}<section class="shell"><div class="pathgrid">${paths.map(p=>{const item=R.find(r=>r.id===p.ids[0]); return `<div class="pathcard" data-route="pathway/${p.id}"><div class="backdrop" style="background-image:url('${previewUrl(item)}')"></div><div class="content" style="padding:24px;display:flex;flex-direction:column;justify-content:flex-end;min-height:280px"><div class="eyebrow" style="color:rgba(255,255,255,.8)">${p.ids.length} stops</div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p></div></div>`}).join('')}</div></section>`}
+function about(){return `${title('About Curiosa','A library of resources for anyone who likes learning.')}<section class="shell" style="max-width:860px;font-size:16px;line-height:1.85;color:var(--muted)"><div class="formbox" style="max-width:none"><p>This library brings together courses, tools, books, museum collections and other useful discoveries.</p><p>Browse by subject, find related resources and visit the original websites to learn more.</p><h2 class="serif" style="font-size:40px;color:var(--ink);margin:18px 0 8px">Explore widely. Wander freely.</h2><p>Search the catalogue, follow a learning path or use Surprise Me to discover a new resource.</p><button class="primary" data-route="suggest">Suggest something interesting ↗</button></div></section>`}
+function suggest(){return `${title('Suggest a discovery','Know a course, a tool, a collection or an unexpected rabbit hole? Put it on Curiosa’s radar.')}<section class="shell"><form id="suggestform" class="formbox"><p class="notice"><strong>Prototype feature:</strong> this form prepares a suggestion and copies it to your clipboard. A moderated submission service can be connected later.</p><label for="suggestname">Resource name</label><input id="suggestname" required placeholder="e.g. A fascinating visual archive"><label for="suggesturl">Website address</label><input id="suggesturl" type="url" required placeholder="https://…"><label for="suggestwhy">What makes it interesting?</label><textarea id="suggestwhy" placeholder="A sentence or two is enough"></textarea><button class="primary" type="submit" style="margin-top:20px">Copy suggestion ↗</button><p id="suggeststatus" class="notice" aria-live="polite"></p></form></section>`}
+function render(){const hash=decodeURIComponent(location.hash.replace(/^#/,''))||'home',parts=hash.split('/');document.getElementById('savecount').textContent=saved.size; if(parts[0]==='home') app.innerHTML=home(); else if(parts[0]==='subjects') app.innerHTML=title('Find your subject','Choose a subject and open out into resources worth exploring.')+`<section class="shell">${subjects()}</section>`; else if(parts[0]==='library') app.innerHTML=library(); else if(parts[0]==='saved') app.innerHTML=library(R.filter(r=>saved.has(r.id)),'Your saved shelf','Saved items stay in this browser on this device.'); else if(parts[0]==='category'){state.category=parts.slice(1).join('/'); app.innerHTML=library(R,parts.slice(1).join('/'),'A collection of resources to explore in this subject.')} else if(parts[0]==='resource') app.innerHTML=detail(R.find(r=>r.id===parts[1])||R[0]); else if(parts[0]==='collection') app.innerHTML=collection(parts[1]); else if(parts[0]==='pathway') app.innerHTML=pathway(parts[1]); else if(parts[0]==='pathways') app.innerHTML=pathwaysPage(); else if(parts[0]==='about') app.innerHTML=about(); else if(parts[0]==='suggest') app.innerHTML=suggest(); else app.innerHTML=home(); if(!['library','category','saved'].includes(parts[0])){state.q='';state.type='All';state.cost='All';state.category='All'} document.title=(parts[0]==='resource'?(R.find(r=>r.id===parts[1])?.title||'Resource')+' — ':'')+'Curiosa · A Library for Curious Minds'; window.scrollTo(0,0)}
+function updateResults(){const items=location.hash.startsWith('#saved')?R.filter(r=>saved.has(r.id)):R; const arr=filtered(items); document.getElementById('resultcards').innerHTML=cards(arr); document.getElementById('resultcount').textContent=`Showing ${arr.length} of ${items.length} discoveries`}
+document.addEventListener('click',async e=>{let b=e.target.closest('[data-save]'); if(b){e.preventDefault();e.stopPropagation();save(b.dataset.save);return} b=e.target.closest('[data-share]'); if(b){const url=location.origin+location.pathname+'#resource/'+b.dataset.share; if(navigator.share) try{await navigator.share({title:'Curiosa',url});return}catch{} try{await navigator.clipboard.writeText(url);toast('Resource link copied')}catch{prompt('Copy this link:',url)} return} b=e.target.closest('[data-surprise]'); if(b){surprise();return} b=e.target.closest('[data-view]'); if(b){state.view=b.dataset.view; document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('on',x.dataset.view===state.view)); updateResults(); return} b=e.target.closest('[data-open]'); if(b){nav('resource/'+b.dataset.open);return} b=e.target.closest('[data-route]'); if(b){nav(b.dataset.route); return} });
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.rescard')){e.preventDefault(); nav('resource/'+e.target.dataset.open)}});
+document.addEventListener('input',e=>{if(e.target.id==='search'){state.q=e.target.value; updateResults()}});
+document.addEventListener('change',e=>{const map={categoryfilter:'category',typefilter:'type',costfilter:'cost'}; if(map[e.target.id]){state[map[e.target.id]]=e.target.value; updateResults()}});
+document.addEventListener('submit',async e=>{if(e.target.id!=='suggestform') return; e.preventDefault(); const s=`Curiosa resource suggestion
+Resource: ${document.getElementById('suggestname').value}
+URL: ${document.getElementById('suggesturl').value}
+Why: ${document.getElementById('suggestwhy').value}`; try{await navigator.clipboard.writeText(s); document.getElementById('suggeststatus').textContent='Suggestion copied. This prototype has not submitted it yet.'; toast('Suggestion copied to clipboard')}catch{document.getElementById('suggeststatus').textContent='Select and copy the suggestion from the dialog.'; prompt('Copy your suggestion:',s)} });
+document.getElementById('navsurprise').onclick=surprise; document.getElementById('mobilemenu').onclick=()=>document.getElementById('navlinks').classList.toggle('open'); window.addEventListener('hashchange',render); render();
+</script>
+</body>
+</html>
